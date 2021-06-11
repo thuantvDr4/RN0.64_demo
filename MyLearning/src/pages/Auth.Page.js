@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 import React,{useState, useRef, useEffect} from 'react';
-import {View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, Platform} from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 
 
@@ -40,19 +40,20 @@ const AuthPage = () => {
     <View style={styles.main_ctn}>
       <KeyboardAvoidingView
       keyboardVerticalOffset={50}
-      behavior ={'padding'}
+      behavior ={Platform.OS === 'ios'?'padding' : 'height'}
       style={styles.keyboardAvoid_ctn}
       >
         <Text style={styles.title_txt}>{'Please input your phone number'}</Text>
 
         <View style={styles.input_ctn}>
           <View style={styles.left_ctn}>
-            <Text>{'+84 | '}</Text>
+            <Text>{''}</Text>
           </View>
           <TextInput
             ref={(input)=> inputRef = input}
+            maxLength ={10}
             style={styles.input_st}
-            placeholder={'909 2287 05'}
+            placeholder={'0 909 2287 05'}
             keyboardType ={'numeric'}
             value={phoneNumb}
             onChangeText={(phone)=>setPhoneNumb(phone)}
@@ -102,7 +103,8 @@ const styles = StyleSheet.create({
   },
   input_st:{
     flex:1,
-    height: 50
+    height: 50,
+    fontSize:18
   },
   bottom_ctn:{
     flex:1,

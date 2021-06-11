@@ -6,7 +6,16 @@
  * @flow strict-local
  */
 import React,{useState, useRef, useEffect} from 'react';
-import {View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import auth from '@react-native-firebase/auth';
 
@@ -20,24 +29,30 @@ const OtpPage = () => {
   const [confirm, setConfirm] = useState(null);
 
   const [waiting, setWaiting] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(()=>{
-    const _phoneNumb = route.params;
+    let _phoneNumb = route.params;
+    _phoneNumb = _phoneNumb.slice(1); // cắt bỏ số 0 đầu số
+
     setPhone(_phoneNumb)
-    //
-    signInWithPhoneNumber()
 
   },[route.params]);
 
 
   useEffect(()=>{
-    textInput.focus();
-  },[])
+    // textInput.focus();
+    if(confirm){
+      setVerifying(false);
+      alert('[verify]---- thành công');
+    }
+
+  },[confirm])
 
 
-  async function signInWithPhoneNumber (){
+  async function signInWithPhoneNumber (phoneNumber){
     try {
-      const confirmation = await auth().signInWithPhoneNumber('+84909792583');
+      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
       console.log('-----signInWithPhoneNumber', confirmation)
       setConfirm(confirmation);
     }catch (e){
@@ -47,7 +62,15 @@ const OtpPage = () => {
   }
 
 
-  function onPressVerify (){
+
+function onPressVerify (){
+    setVerifying(true);
+    signInWithPhoneNumber("+84"+ phone);
+  }
+
+
+
+  function onPressSubmitCode (){
     if(otpCode.length ===lengthCode){
       //
       setWaiting(true);
@@ -56,6 +79,7 @@ const OtpPage = () => {
     }
 
   }
+
 
   async function confirmCode (){
     try {
@@ -79,11 +103,21 @@ const OtpPage = () => {
     <View style={styles.main_ctn}>
       <KeyboardAvoidingView
         keyboardVerticalOffset={50}
-        behavior ={'padding'}
+        behavior ={Platform.OS === 'ios'?'padding' : 'height'}
         style={styles.keyboardAvoid_ctn}
       >
         <Text style={styles.title_txt}>{'Input your OTP code via SMS'}</Text>
-        <Text style={styles.title_txt}>{phone}</Text>
+        <View style={styles.verify_ctn}>
+          <Text style={styles.title_txt}>{'+84 '+ phone}</Text>
+          <TouchableOpacity
+            onPress={onPressVerify}
+            style={styles.btn_verify}>
+            {verifying?  <ActivityIndicator size="large" color="#ffffff" /> :
+              <Text style={styles.verify_txt}>{'Verify'}</Text>
+            }
+          </TouchableOpacity>
+        </View>
+
         <View>
           <TextInput
             ref={(input)=> textInput = input}
@@ -103,7 +137,7 @@ const OtpPage = () => {
                   onPress={()=>textInput.focus()}
                   key={'Key:'+index}
                       style={[styles.cell_ctn,{
-                        borderBottomColor: index === otpCode.length? '#ff9800': '#ffffff'
+                        borderBottomColor: index === otpCode.length? '#ff9800': '#696969'
                       }]}>
                   <Text
                     style={styles.cell_txt}>
@@ -117,14 +151,12 @@ const OtpPage = () => {
         </View>
         <View style={styles.bottom_cnt}>
           <TouchableOpacity
-            onPress={onPressVerify}
+            onPress={onPressSubmitCode}
             style={styles.btn_verify}>
-            {waiting?  <ActivityIndicator size="large" color="#00ff00" /> :
-              <Text style={styles.verify_txt}>{'Verify'}</Text>
+            {waiting?  <ActivityIndicator size="large" color="#ffffff" /> :
+              <Text style={styles.verify_txt}>{'submit Code'}</Text>
             }
-
           </TouchableOpacity>
-
 
 
         </View>
@@ -146,7 +178,7 @@ const styles = StyleSheet.create({
   },
   title_txt:{
     color: '#2979ff',
-    marginVertical: 50
+    marginVertical: 20
   },
   input_ctn:{
     flexDirection: 'row',
@@ -170,6 +202,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     flex:1,
     marginBottom:50
+  },
+  verify_ctn:{
+    flex:1,
+    alignItems:'center',
+    justifyContent: 'center',
+
   },
   btn_verify:{
     height: 50,
