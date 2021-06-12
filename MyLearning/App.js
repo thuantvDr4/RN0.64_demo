@@ -10,17 +10,25 @@ import React,{useEffect} from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
 //
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+//
 import HomePage from "./src/pages/Home.Page";
 import DetailPage from "./src/pages/Detail.Page";
 import AuthPage from "./src/pages/Auth.Page";
 import OtpPage from "./src/pages/Otp.Page";
 import SignInPage from "./src/pages/Signin.Page";
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { Settings } from 'react-native-fbsdk-next';
 
 
-/*------config-*/
+
+/*---config -fbSDK----*/
+Settings.initializeSDK();
+/*------config--GG sign-In--*/
 GoogleSignin.configure({
+  offlineAccess: true,
   webClientId: '434864754377-e12ri35ofu2bun9nddhf5ntd2tkt5bo8.apps.googleusercontent.com',
+  //androidClientId:'434864754377-firj2a8onndl7l02qavnu6q9i4svbh82.apps.googleusercontent.com'
 });
 //
 const Stack = createStackNavigator();

@@ -7,18 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:434864754377:android:3ce1d27358292f3e6a8718",
+        "mobilesdk_app_id": "1:434864754377:android:26b6766a7793f82f6a8718",
         "android_client_info": {
           "package_name": "com.mylearning"
         }
       },
       "oauth_client": [
         {
-          "client_id": "434864754377-firj2a8onndl7l02qavnu6q9i4svbh82.apps.googleusercontent.com",
+          "client_id": "434864754377-dd1qlhcjcvbealg526nkbveslcrq6stb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.mylearning",
-            "certificate_hash": "0d0ac60facf7255ff5843093ad4a1da0e05e824a"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
@@ -37,6 +37,13 @@
             {
               "client_id": "434864754377-e12ri35ofu2bun9nddhf5ntd2tkt5bo8.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "434864754377-esrv0t7juscp68mcat50vaoejir59nor.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.MyLearning"
+              }
             }
           ]
         }
